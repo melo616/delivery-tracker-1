@@ -1,3 +1,4 @@
+<%= notice %>
 <div>
   <div>
     <h1>
@@ -37,7 +38,7 @@
           Details
         </label>
 
-        <input type="text" id="details_box" name="query_details">
+        <textarea id="details_box" name="query_details"></textarea>
       </div>
 
       <div>
@@ -81,19 +82,43 @@
 
         <div>
           <form action="/modify_delivery/<%= a_delivery.id %>" method="post">
-            <input type="hidden" name="query_details" value="a_delivery.details">
-            <input type="hidden" name="query_supposed_to_arrive_on" value="a_delivery.supposed_to_arrive_on">
-            <input type="hidden" name="query_description" value="a_delivery.description">
-            <input type="hidden" name="query_user_id" value="a_delivery.user_id">
+            <input type="hidden" name="query_details" value="<%= a_delivery.details %>">
+            <input type="hidden" name="query_supposed_to_arrive_on" value="<%= a_delivery.supposed_to_arrive_on %>">
+            <input type="hidden" name="query_description" value="<%= a_delivery.description %>">
+            <input type="hidden" name="query_user_id" value="<%= a_delivery.user_id %>">
             <input type="hidden" name="query_arrived" value="true">
             <button>Mark as received</button>
           </form>
         </div>
-
-        <td>
-          <%= a_delivery.arrived %>
-        </td>
       </li>
+  <% end %>
+  </ul>
+</div>
+
+<div class="received">
+  <h2>
+    Received
+  </h2>
+  <ul>
+  <% @list_of_received_deliveries.each do |a_delivery| %>
+    <div>
+      <li>
+        <div>
+          <%= a_delivery.description %>
+        </div>
+
+        <div>
+          Updated <%= time_ago_in_words(a_delivery.updated_at) %> ago
+          <a href="/delete_delivery/<%= a_delivery.id %>">Delete</a>
+        </div>
+
+        <% if a_delivery.details != nil %>
+        <div>
+          <%= a_delivery.details %>
+        </div>
+        <% end %>
+      </li>
+    </div>
   <% end %>
   </ul>
 </div>
