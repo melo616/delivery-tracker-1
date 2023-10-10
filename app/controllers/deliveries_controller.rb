@@ -1,8 +1,6 @@
 class DeliveriesController < ApplicationController
   def index
-    matching_deliveries = Delivery.all
-
-    @list_of_deliveries = matching_deliveries.order({ :created_at => :desc })
+    @list_of_waiting_on_deliveries = Delivery.where({ :arrived => "false" }).order({ :created_at => :desc })
 
     render({ :template => "deliveries/index" })
   end
@@ -45,9 +43,9 @@ class DeliveriesController < ApplicationController
 
     if the_delivery.valid?
       the_delivery.save
-      redirect_to("/deliveries/#{the_delivery.id}", { :notice => "Delivery updated successfully."} )
+      redirect_to("/", { :notice => "Delivery updated successfully."} )
     else
-      redirect_to("/deliveries/#{the_delivery.id}", { :alert => the_delivery.errors.full_messages.to_sentence })
+      redirect_to("/", { :alert => "Could not update delivery." })
     end
   end
 

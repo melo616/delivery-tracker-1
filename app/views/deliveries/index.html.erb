@@ -1,8 +1,9 @@
 <div>
   <div>
     <h1>
-      List of all deliveries
+      Delivery Tracker
     </h1>
+    <p>Know if something gets lost in the mail.</p>
   </div>
 </div>
 
@@ -11,7 +12,7 @@
 <div>
   <div>
     <h2>
-      Add a new delivery
+      Expecting a package?
     </h2>
 
     <form action="/insert_delivery" method="post">
@@ -40,109 +41,59 @@
       </div>
 
       <div>
-        <label for="user_id_box">
-          User
-        </label>
-
-        <input type="text" id="user_id_box" name="query_user_id">
+        <input type="hidden" id="user_id_box" name="query_user_id" value="<%=current_user.id%>">
       </div>
 
       <div>
-        <input type="checkbox" id="arrived_box" name="query_arrived" value="1">
-
-        <label for="arrived_box">Arrived</label>
+        <input type="hidden" id="arrived_box" name="query_arrived" value="0">
       </div>
 
       <button>
-        Create delivery
+        Log delivery
       </button>
     </form>
   </div>
 </div>
 
 <hr>
-<div>
-  <div>
-    <table border="1">
-      <tr>
-        <th>
-          ID
-        </th>
 
-        <th>
-          Description
-        </th>
-
-        <th>
-          Supposed to arrive on
-        </th>
-
-        <th>
-          Details
-        </th>
-
-        <th>
-          User
-        </th>
-
-        <th>
-          Arrived
-        </th>
-
-        <th>
-          Created at
-        </th>
-
-        <th>
-          Updated at
-        </th>
-
-        <th>
-        </th>
-      </tr>
-
-      <% @list_of_deliveries.each do |a_delivery| %>
-      <tr>
-        <td>
-          <%= a_delivery.id %>
-        </td>
-
-        <td>
+<div class="waiting_on">
+  <h2>
+    Waiting on
+  </h2>
+  <ul>
+  <% @list_of_waiting_on_deliveries.each do |a_delivery| %>
+      <li>
+        <div>
           <%= a_delivery.description %>
-        </td>
+        </div>
 
-        <td>
-          <%= a_delivery.supposed_to_arrive_on %>
-        </td>
+        <div>
+          Supposed to arrive on <%= a_delivery.supposed_to_arrive_on %>
+        </div>
 
-        <td>
+        <% if a_delivery.details != nil %>
+        <div>
           <%= a_delivery.details %>
-        </td>
+        </div>
+        <% end %>
+        
 
-        <td>
-          <%= a_delivery.user_id %>
-        </td>
+        <div>
+          <form action="/modify_delivery/<%= a_delivery.id %>" method="post">
+            <input type="hidden" name="query_details" value="a_delivery.details">
+            <input type="hidden" name="query_supposed_to_arrive_on" value="a_delivery.supposed_to_arrive_on">
+            <input type="hidden" name="query_description" value="a_delivery.description">
+            <input type="hidden" name="query_user_id" value="a_delivery.user_id">
+            <input type="hidden" name="query_arrived" value="true">
+            <button>Mark as received</button>
+          </form>
+        </div>
 
         <td>
           <%= a_delivery.arrived %>
         </td>
-
-        <td>
-          <%= time_ago_in_words(a_delivery.created_at) %> ago
-        </td>
-        <td>
-          <%= time_ago_in_words(a_delivery.updated_at) %> ago
-        </td>
-
-        <td>
-          <a href="/deliveries/<%= a_delivery.id %>">
-            Show details
-          </a>
-        </td>
-      </tr>
-      <% end %>
-    </table>
-  </div>
+      </li>
+  <% end %>
+  </ul>
 </div>
-
-<hr>
